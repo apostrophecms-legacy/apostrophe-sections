@@ -10,6 +10,22 @@ function AposSections(options) {
       $group.data('enabled', true);
 
       $group.find('[data-sections]').sortable({
+        handle: '.apos-section-handle',
+        // cursorAt: { top:0, left: 0 },
+        // tolerance: "pointer",
+        sort: function( event, ui ) {
+          $('[data-section]').each(function(){
+            $(this).addClass('apos-section-collapse');
+          });
+          $(this).sortable('refreshPositions');
+
+        },
+        stop: function( event, ui ) {
+          $('[data-section]').each(function(){
+            $(this).removeClass('apos-section-collapse');
+          });
+          $(this).sortable('refreshPositions');
+        },
         'update': function() {
           var $group = $(this).closest('[data-section-group]');
           self.commit($group);
@@ -17,8 +33,24 @@ function AposSections(options) {
         }
       });
 
+
       var $sections = $group.find('[data-section]');
       var $addForm = $(this).find('[data-add-section]');
+
+      // You can use something like this to do a smooth scroll to your section
+      // on nav click, however I needed something a bit more custom at the project level
+      // - Stuart
+      
+      // $group.find('[data-section-anchor]').on('click', function() {
+      //   event.preventDefault();
+      //   var $self = $(this);
+      //   var section = $self.attr('href').split('#section');
+      //   $('html, body').animate({
+      //     scrollTop: $('[data-section="'+section[1]+'"]').offset().top
+      //    }, 1000);
+      //   return false;
+      // });
+
 
       $group.find('[data-add-button]').on('click', function() {
         var $title = $addForm.find('[name="title"]');
@@ -27,6 +59,7 @@ function AposSections(options) {
         $title.focus();
         return false;
       });
+
       $addForm.find('[data-save-new-section]').on('click', function() {
         var id = apos.generateId();
         var $section = $addForm.find('[data-section]').clone();
@@ -36,7 +69,6 @@ function AposSections(options) {
         $area.attr('data-slug', $area.attr('data-slug').replace('NEW', id));
         $section.attr('data-section', id);
         $group.find('[data-sections]').append($section);
-        $section.show();
         $addForm.hide();
         self.commit($group);
         return false;
@@ -121,7 +153,6 @@ function AposSections(options) {
       var $anchor = $link.find('[data-section-anchor]');
       $anchor.text(section.title);
       $anchor.attr('href', '#section' + section._id);
-      $link.show();
       $links.append($link);
     });
   };
