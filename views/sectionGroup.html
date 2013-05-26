@@ -15,12 +15,14 @@
       <h4 class="apos-section-title" data-title>
         {# Target for internal links wrapped around label #}
         <a data-title-anchor name="section{{ section._id }}"><span data-title-text>{{ section.title | e }}</span></a>
+        
+        <div style="display: none" class="apos-edit-section" data-edit-section>
+          <input type="text" name="title" />
+          <a href="#" class="apos-save apos-button apos-control" data-save-section>Save</a>
+          <a href="#" class="apos-cancel apos-button apos-control" data-cancel>Cancel</a>
+        </div>
       </h4>
-      <div style="display: none" class="apos-edit-section" data-edit-section>
-        <input type="text" name="title" />
-        <a href="#" class="apos-save" data-save-section>Save</a>
-        <a href="#" class="apos-cancel" data-cancel>Cancel</a>
-      </div>
+      
       {# TODO what about area options? Awkward to merge things in nunjucks #}
       {{ aposArea({ slug: page.slug + ':' + section._id, area: page.areas[section._id], edit: edit }) }}
     </div>
@@ -58,8 +60,8 @@
     <a href="#" class="apos-button apos-control" data-add-button>Add Section</a>
     <div style="display: none" data-add-section class="apos-add-section">
       <input type="text" name="title" />
-      <a href="#" class="apos-save" data-save-new-section>Add</a>
-      <a href="#" class="apos-cancel" data-cancel>Cancel</a>
+      <a href="#" class="apos-save apos-button apos-control" data-save-new-section>Add</a>
+      <a href="#" class="apos-cancel apos-button apos-control" data-cancel>Cancel</a>
       {# This one gets cloned as needed #}
       <div style="display: none">{{ renderSection(page, { _id: 'NEW' }) }}</div>
     </div>

@@ -85,25 +85,43 @@ function AposSections(options) {
         return false;
       });
       $group.on('click', '[data-section] [data-remove-button]', function() {
-        var $section = $(this).closest('[data-section]');
-        $section.remove();
-        self.commit($group);
-        return false;
+        var remove = confirm("Are you sure you want to remove this Section?");
+        if (remove === true)
+          {
+            var $section = $(this).closest('[data-section]');
+            $section.remove();
+            self.commit($group);
+            return false;
+          }
+        else
+          {
+            return false;
+          }
       });
       $group.on('click', '[data-section] [data-edit-button]', function() {
         var $section = $(this).closest('[data-section]');
+
+        // do a check to see if we're already editing
+        if ($section.find('[data-edit-section]').css('display') === 'block'){
+          return false;
+        }
+        
         $section.find('[data-edit-section]').toggle();
+        $section.find('[data-title-text]').hide();
         $section.find('[data-edit-section] [name="title"]').val($section.find('[data-title-text]').text());
         return false;
       });
       $group.on('click', '[data-edit-section] [data-cancel]', function() {
-        $(this).closest('[data-edit-section]').hide();
+        var $section = $(this).closest('[data-section]');
+        $section.find('[data-edit-section]').hide();
+        $section.find('[data-title-text]').show();
         return false;
       });
       $group.on('click', '[data-edit-section] [data-save-section]', function() {
         var $section = $(this).closest('[data-section]');
         $section.find('[data-title-text]').text($section.find('[name="title"]').val());
         $(this).closest('[data-edit-section]').hide();
+        $section.find('[data-title-text]').show();
         self.commit($group);
         return false;
       });
