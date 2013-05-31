@@ -65,7 +65,7 @@ function AposSections(options) {
         var $section = $addForm.find('[data-section]').clone();
         $section.find('[data-title-text]').text($addForm.findByName('title').val());
         $section.find('[data-title-anchor]').attr('name', id);
-        var $area = $section.find('.apos-area');
+        var $area = $section.find('[data-slug="'+$section.context.dataset.slug + ':NEW"]');
         $area.attr('data-slug', $area.attr('data-slug').replace('NEW', id));
         $section.attr('data-section', id);
         $group.find('[data-sections]').append($section);
