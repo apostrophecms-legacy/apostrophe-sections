@@ -68,16 +68,22 @@ sections.Sections = function(options, callback) {
   };
 
   // REFACTOR
-  self.pushAsset = function(type, name) {
+  self.pushAsset = function(type, name, optionsArg) {
+    var options = {};
+    if (optionsArg) {
+      extend(true, options, optionsArg);
+    }
     if (type === 'template') {
       // Render templates in our own nunjucks context
-      self._apos.pushAsset('template', self.renderer(name));
+      self._apos.pushAsset('template', self.renderer(name), options);
     } else {
       // We're interested in ALL versions of main.js or main.css, starting
       // with the base one (this module's version)
 
       _.each(self._reverseModules, function(module) {
-        return self._apos.pushAsset(type, name, module.dir, module.web);
+        options.fs = module.dir;
+        options.web = module.web;
+        return self._apos.pushAsset(type, name, options);
       });
     }
   };
@@ -168,10 +174,10 @@ sections.Sections = function(options, callback) {
     construct: browserOptions.construct || 'AposSections'
   };
 
-  self._apos.pushGlobalCall('window.aposSections = new @(?)', browser.construct, { action: self._action });
+  self._apos.pushGlobalCallWhen('user', 'window.aposSections = new @(?)', browser.construct, { action: self._action });
 
-  self.pushAsset('script', 'main');
-  self.pushAsset('stylesheet', 'main');
+  self.pushAsset('script', 'editor', { when: 'user' });
+  self.pushAsset('stylesheet', 'editor', { when: 'user' });
 
   // Serve our static assets REFACTOR
   _.each(self._modules, function(module) {
