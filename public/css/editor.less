@@ -2,3 +2,43 @@
 {
   display: none;
 }
+
+.apos-section
+{
+  position: relative;
+  // transition: max-height 0.4s;
+  // -webkit-transition: max-height 0.4s; /* Safari */
+  max-height: 99999px;
+
+  .apos-edit,
+  .apos-remove,
+  .apos-section-handle
+  {
+    float: right;
+  }
+  
+  &.apos-section-collapse,
+  &.ui-sortable-placeholder{
+    max-height: 30px !important;
+    overflow:hidden !important;
+  } 
+}
+
+.apos-edit-section
+{
+  .apos-save,
+  .apos-cancel
+  {
+    float: none;
+  }
+  input
+  {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    padding: 6px 9px;
+    font-weight: inherit;
+    text-transform: inherit;
+    
+  }
+}

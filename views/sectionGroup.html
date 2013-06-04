@@ -1,58 +1,69 @@
 {# Macro to render one section. We use it both for the existing sections and for #}
 {# one hidden section that's just there to be cloned as needed by the editor #}
 
-{% macro renderSection(page, section, hidden) %}
-  <section class="apos-section" data-section="{{ section._id }}" {% if hidden %}style="display: none"{% endif %}>
-    <h4 data-title>
-      {# Target for internal links wrapped around label #}
-      <a data-title-anchor name="section{{ section._id }}"><span data-title-text>{{ section.title | e }}</span></a>
-      {% if edit %}
-        <a href="#" class="apos-edit" data-edit-button>Edit Section</a>
-        <a href="#" class="apos-remove" data-remove-button>Remove Section</a>
-      {% endif %}
-    </h4>
-    <div style="display: none" class="apos-edit-section" data-edit-section>
-      <input type="text" name="title" />
-      <a href="#" class="apos-save" data-save-section>Save</a>
-      <a href="#" class="apos-cancel" data-cancel>Cancel</a>
+{% macro renderSection(page, section) %}
+  <section class="apos-section" data-section="{{ section._id }}">
+    <div class="apos-section-inner">
+      <div class="apos-section-controls clearfix">
+        {% if edit %}
+          <a class="apos-section-handle apos-button apos-control" href="#"><i class="icon-resize"></i></a>
+          <a href="#" class="apos-edit apos-button apos-control" data-edit-button>Edit Section</a>
+          <a href="#" class="apos-remove apos-button apos-control" data-remove-button>Remove Section</a>
+        {% endif %}
+      </div>
+      
+      <h4 class="apos-section-title" data-title>
+        {# Target for internal links wrapped around label #}
+        <a data-title-anchor name="section{{ section._id }}"><span data-title-text>{{ section.title | e }}</span></a>
+        
+        <div style="display: none" class="apos-edit-section" data-edit-section>
+          <input type="text" name="title" />
+          <a href="#" class="apos-save apos-button apos-control" data-save-section>Save</a>
+          <a href="#" class="apos-cancel apos-button apos-control" data-cancel>Cancel</a>
+        </div>
+      </h4>
+      
+      {# TODO what about area options? Awkward to merge things in nunjucks #}
+      {{ aposArea({ slug: page.slug + ':' + section._id, area: page.areas[section._id], edit: edit }) }}
     </div>
-    {# TODO what about area options? Awkward to merge things in nunjucks #}
-    {{ aposArea({ slug: page.slug + ':' + section._id, area: page.areas[section._id], edit: edit }) }}
   </section>
 {% endmacro %}
 
-{% macro renderSectionLink(section, hidden) %}
-  <li data-section-link class="apos-section-link" {% if hidden %}style="display: none" {% endif %}><a data-section-anchor href="#section{{ section._id }}">{{ section.title | e }}</a></li>
+{% macro renderSectionLink(section) %}
+  <li data-section-link class="apos-section-link"><a data-section-anchor href="#section{{ section._id }}">{{ section.title | e }}</a></li>
 {% endmacro %}
 
 {# Main div for a section group #}
 
 <div data-slug="{{ page.slug }}" data-section-group="{{ name }}" class="apos-section-group apos-section-group-{{ name }}">
   {# Internal links to the sections #}
-  <ul data-section-links class="apos-section-links">
-    {% for section in page.sectionGroups[name].sections %}
-      {{ renderSectionLink(section, false) }}
-    {% endfor %}
-  </ul>
+  <div class="apos-section-links-container">
+    <ul data-section-links class="apos-section-links">
+      {% for section in page.sectionGroups[name].sections %}
+        {{ renderSectionLink(section) }}
+      {% endfor %}
+    </ul>
+  </div>
+
 
   {# A hidden section link for JS to clone as needed #}
-  <ul style="display: none" data-template-links>{{ renderSectionLink({ _id: 'NEW' }, true) }}</ul>
+  <ul style="display: none" data-template-links>{{ renderSectionLink({ _id: 'NEW' }) }}</ul>
 
   {# The sections themselves #}
   <div data-sections class="apos-sections">
     {% for section in page.sectionGroups[name].sections %}
-      {{ renderSection(page, section, false) }}
+      {{ renderSection(page, section) }}
     {% endfor %}
   </div>
   {# The editing tools for adding a new section #}
   {% if edit %}
-    <a href="#" data-add-button>Add Section</a>
+    <a href="#" class="apos-button apos-control" data-add-button>Add Section</a>
     <div style="display: none" data-add-section class="apos-add-section">
       <input type="text" name="title" />
-      <a href="#" class="apos-save" data-save-new-section>Add</a>
-      <a href="#" class="apos-cancel" data-cancel>Cancel</a>
+      <a href="#" class="apos-save apos-button apos-control" data-save-new-section>Add</a>
+      <a href="#" class="apos-cancel apos-button apos-control" data-cancel>Cancel</a>
       {# This one gets cloned as needed #}
-      {{ renderSection(page, { _id: 'NEW' }, true) }}
+      <div style="display: none">{{ renderSection(page, { _id: 'NEW' }) }}</div>
     </div>
     <div class="apos-section-busy">Saving...</div>
   {% endif %}
