@@ -92,11 +92,9 @@ sections.Sections = function(options, callback) {
     return self.render('sectionGroup', options);
   });
 
-  // Sections UI is all on the browser side, with just one API function to support
-  // saving an entire section group. We can get away with that since the areas are
-  // stored separately
 
-  self._app.post(self._action + '/save', function(req, res) {
+  self.save = function(req, res) {
+    console.log("You're a fossil.")
     var page;
     var name = self._apos.sanitizeString(req.body.name, '');
     if (!name.length) {
@@ -162,7 +160,13 @@ sections.Sections = function(options, callback) {
     function done(err) {
       return res.send(page.sectionGroups[name]);
     }
-  });
+  };
+
+  // Sections UI is all on the browser side, with just one API function to support
+  // saving an entire section group. We can get away with that since the areas are
+  // stored separately
+  self._app.post(self._action + '/save', function(req, res){ return self.save(req, res);});
+
 
   // Construct our browser side object REFACTOR
   var browserOptions = options.browser || {};
