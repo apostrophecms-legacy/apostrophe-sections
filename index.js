@@ -94,7 +94,6 @@ sections.Sections = function(options, callback) {
 
 
   self.save = function(req, res) {
-    console.log("You're a fossil.")
     var page;
     var name = self._apos.sanitizeString(req.body.name, '');
     if (!name.length) {
