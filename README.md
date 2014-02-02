@@ -6,3 +6,7 @@ Support for pages that are split into multiple sections, accessible via scrollin
 
 Current status: working rather nicely, but absolutely no standard styles, and the button markup needs to be made more suitable.
 
+### Code Stability
+
+0.4.x releases receive bug fixes only. For active development, follow 0.5.x releases and/or the master branch in github.
+
