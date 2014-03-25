@@ -1,6 +1,6 @@
 {
   "name": "apostrophe-sections",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Allows pages to contain multiple titled sections accessible via internal tabs, and permits users to add and remove sections freely.",
   "main": "index.js",
   "scripts": {
