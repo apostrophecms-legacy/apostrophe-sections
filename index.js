@@ -144,9 +144,7 @@ sections.Sections = function(options, callback) {
       });
     }
     function permissions(callback) {
-      return self._apos.permissions(req, 'edit-page', page, function(err) {
-        return callback(err);
-      });
+      return callback(self._apos.permissions.can(req, 'edit-page', page) ? null : 'forbidden');
     }
     function add(callback) {
       // Set up a flexible structure with room for options etc. later
