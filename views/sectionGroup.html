@@ -24,7 +24,7 @@
       </h4>
       
       {# TODO what about area options? Awkward to merge things in nunjucks #}
-      {{ aposArea({ slug: page.slug + ':' + section._id, area: page.areas[section._id], edit: edit }) }}
+      {{ aposArea({ slug: page.slug + ':' + section._id, area: page[section._id], edit: edit }) }}
     </div>
   </section>
 {% endmacro %}
