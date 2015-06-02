@@ -67,26 +67,26 @@ sections.Sections = function(options, callback) {
     };
   };
 
-  // REFACTOR
-  self.pushAsset = function(type, name, optionsArg) {
-    var options = {};
-    if (optionsArg) {
-      extend(true, options, optionsArg);
-    }
-    if (type === 'template') {
-      // Render templates in our own nunjucks context
-      self._apos.pushAsset('template', self.renderer(name), options);
-    } else {
-      // We're interested in ALL versions of main.js or main.css, starting
-      // with the base one (this module's version)
-
-      _.each(self._reverseModules, function(module) {
-        options.fs = module.dir;
-        options.web = module.web;
-        return self._apos.pushAsset(type, name, options);
-      });
-    }
-  };
+  // REFACTOR - This has been deprecated using assets instead. --Joel
+  // self.pushAsset = function(type, name, optionsArg) {
+  //   var options = {};
+  //   if (optionsArg) {
+  //     extend(true, options, optionsArg);
+  //   }
+  //   if (type === 'template') {
+  //     // Render templates in our own nunjucks context
+  //     self._apos.pushAsset('template', self.renderer(name), options);
+  //   } else {
+  //     // We're interested in ALL versions of main.js or main.css, starting
+  //     // with the base one (this module's version)
+  //
+  //     _.each(self._reverseModules, function(module) {
+  //       options.fs = module.dir;
+  //       options.web = module.web;
+  //       return self._apos.pushAsset(type, name, options);
+  //     });
+  //   }
+  // };
 
   self._apos.addLocal('aposSectionGroup', function(options) {
     return self.render('sectionGroup', options);
@@ -175,15 +175,18 @@ sections.Sections = function(options, callback) {
     construct: browserOptions.construct || 'AposSections'
   };
 
+  self._apos.mixinModuleAssets(self, 'sections', __dirname, options);
+
   self._apos.pushGlobalCallWhen('user', 'window.aposSections = new @(?)', browser.construct, { action: self._action });
 
   self.pushAsset('script', 'editor', { when: 'user' });
   self.pushAsset('stylesheet', 'editor', { when: 'user' });
 
-  // Serve our static assets REFACTOR
-  _.each(self._modules, function(module) {
-    self._app.get(module.web + '/*', self._apos.static(module.dir + '/public'));
-  });
+  // // Serve our static assets REFACTOR
+  // _.each(self._modules, function(module) {
+  //   self._app.get(module.web + '/*', self._apos.static(module.dir + '/public'));
+  // });
+
 
   if (callback) {
     // Invoke callback on next tick so that the constructor's return
